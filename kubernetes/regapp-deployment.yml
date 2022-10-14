@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-pod
+  labels:
+    app: demo-app
+
+spec:
+  containers:
+    - name: demo-nginx
+      image: nginx
+      ports:
+        - name: demo-nginx
+          containerPort: 80
+[root@ip-172-31-25-236 ~]# cat regapp-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cristiansoanca-regapp
+  labels:
+    app: regapp
+
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: regapp
+
+  template:
+    metadata:
+      labels:
+        app: regapp
+    spec:
+      containers:
+        - name: regapp
+          image: cristiansoanca/regapp
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+
